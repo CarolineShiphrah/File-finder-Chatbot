@@ -1,0 +1,72 @@
+import os
+import datetime
+
+def get_all_files():
+    path = input("Enter the file path: ").strip('"\'')
+    for (root, directories, files) in os.walk(path):
+        print(files)
+        for file in files:
+           file_name = os.path.join(root,file)
+           print(file_name)
+
+def get_files_with_extension():
+    path = input("Enter the file path: ").strip('"\'')
+    extension = input("Enter the extension: ")
+    for (root, directories, files) in os.walk(path):
+        print(files)
+        for file in files:
+            if file.endswith(extension):
+                file_name = os.path.join(root, file)
+                print(file_name)
+
+def get_files_modified_yesterday():
+    start_date = today_date - datetime.timedelta(days=1)
+    end_date = today_date
+    find_files_between_dates(start_date, end_date)
+
+def find_files_between_dates(start_date, end_date):
+    path = input("Enter the file path: ").strip('"\'')
+    for (root, directories, files) in os.walk(path):
+        for file in files:
+            file_name = os.path.join(root, file)
+            modified_date = get_modified_date(file_name)
+            if modified_date >= start_date and modified_date <= end_date:
+                print(file_name, modified_date)
+
+def get_modified_date(file_name):
+    modified_date = os.path.getmdate(file_name)
+    date = datetime.date.fromtimestamp(modified_date)
+    return date
+
+def get_files_modified_in_range():
+    start_date_string = input("Enter the start date in dd-mm-yyyy: ")
+    start_date = convert_date(start_date_string)
+    end_date = convert_date(input("Enter the end date in dd-mm-yyyy: "))
+    find_files_between_dates(start_date, end_date)
+
+def convert_date(date_string):
+    day, month, year = map(int, date_string.split('-'))
+    date = datetime.date(day, month,year)
+    return date
+
+today_day = datetime.date.today()
+
+while True:
+    print(" Hi there :)\n What files do you like to search?")
+    print(" 1. All files\n 2. Files with extension\n 3. Files modified yesterday\n 4. Files modified in range\n 5. Exit")
+   
+    user_input = input("Enter your choice: ")
+    
+    if user_input == 'All files'.lower() or '1':
+        get_all_files()
+    elif user_input == 'Files with extension'.lower() or '2':
+        get_files_with_extension()
+    elif user_input == 'Files modified yesterday'.lower() or '3':
+        get_files_modified_yesterday()
+    elif user_input == 'Files modified in range'.lower() or '4':
+        get_files_modified_in_range()
+    elif user_input == 'Exit'.lower() or '5':
+        print("Have a nice day:D")
+        break
+    else:
+        print("Invalid Choice!!")
